@@ -1,5 +1,7 @@
 # BookGuide (دليل الكتب)
 
+**Live:** https://bookguide.vercel.app
+
 A small prototype that lets a reader search for a book once and see its
 price, stock status, and delivery cost across four Omani bookstores —
 highlighting the cheapest and fastest option — instead of checking each
