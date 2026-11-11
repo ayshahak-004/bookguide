@@ -1,0 +1,38 @@
+{
+  "thawaqa": {
+    "fee_type": "flat",
+    "flat_fee_omr": 2.0,
+    "free_over_omr": null,
+    "estimated_days": "TODO"
+  },
+  "unibook": {
+    "fee_type": "flat",
+    "flat_fee_omr": 1.0,
+    "free_over_omr": null,
+    "estimated_days": "TODO"
+  },
+  "phenuq": {
+    "fee_type": "flat",
+    "flat_fee_omr": 1.0,
+    "free_over_omr": 20,
+    "estimated_days": "1-2"
+  },
+  "rawazin": {
+    "fee_type": "by_region",
+    "fees_by_region": {
+      "مسقط": 2,
+      "ظفار": 2,
+      "مسندم": 2.5,
+      "البريمي": 2,
+      "الداخلية": 2,
+      "شمال الباطنة": 2,
+      "جنوب الباطنة": 2,
+      "جنوب الشرقية": 2,
+      "شمال الشرقية": 2,
+      "الظاهرة": 2,
+      "الوسطى": 2.5
+    },
+    "free_over_omr": null,
+    "estimated_days": "TODO"
+  }
+}
