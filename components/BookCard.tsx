@@ -9,13 +9,13 @@ export function BookCard({ book, rows, badges }: { book: Book; rows: Row[]; badg
   return (
     <section className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm">
       {book.image_url && (
-        <div className="relative w-20 flex-shrink-0 self-stretch overflow-hidden rounded-lg sm:w-28">
+        <div className="relative aspect-[2/3] w-20 flex-shrink-0 self-start overflow-hidden rounded-lg bg-cream sm:w-28">
           <Image
             src={book.image_url}
             alt={book.title}
             fill
             unoptimized
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       )}

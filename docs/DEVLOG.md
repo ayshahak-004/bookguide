@@ -207,3 +207,88 @@ that were pure bundle weight.
 largest JS chunk from 4.7MB to 248KB. Re-ran `audit-targeted.ts`
 afterward and confirmed all 42 target titles still resolve to a match
 (nothing useful was discarded, only the untargeted long tail).
+
+### Custom Tailwind color tokens silently didn't render
+
+**Problem:** After redesigning the UI around a cream/navy palette defined
+in `app/globals.css`'s `@theme inline` block, the navy header bar and the
+active language-toggle pill both rendered with **no background at all** -
+completely invisible against the page.
+**Cause:** `getComputedStyle(el).backgroundColor` came back
+`rgba(0,0,0,0)` even though `bg-navy` was applied and `text-navy` worked
+fine elsewhere on the same page. The dev server (`next dev`) had been
+running continuously since *before* these color tokens were added, and
+Turbopack's filesystem cache for dev (on by default in Next.js 16) never
+picked up the new theme tokens.
+**Fix:** Killed the running dev server, deleted `.next/`, and restarted
+`npm run dev` fresh. No code changes were needed - the CSS was already
+correct.
+**Verified:** Same elements rendered with the correct navy background
+immediately on the next reload.
+
+### "Cheapest"/"fastest" badges were awarded to out-of-stock listings
+
+**Problem:** Live-testing a search for a book that happened to be out of
+stock at all four stores, the "cheapest total" badge still appeared on
+one of the out-of-stock rows - implying it was the best buy when it
+couldn't actually be bought there.
+**Cause:** `computeBadges()` only checked that a row had a computed total
+(`total_omr !== null`); it never checked `listing.in_stock`. An
+out-of-stock row with a known price and delivery fee still produces a
+valid total and can "win" the cheapest/fastest comparison.
+**Fix:** `computeBadges()` (`lib/rows.ts`) now filters to
+`rows.filter(r => r.listing.in_stock)` before computing the
+cheapest/fastest/within-budget sets, so a badge is never shown on
+something that isn't actually purchasable there.
+**Verified:** Re-ran the same out-of-stock search - no badges appear
+anywhere now. Searched "Atomic Habits" (in stock at two stores) - the
+cheapest badge still correctly appears on the cheaper in-stock listing.
+
+### Real store logos needed three different fixes, not one
+
+**Problem:** Replacing the letter-tile placeholders with each store's
+real logo (linked to its homepage), three different problems showed up:
+Thawaqa's logo was invisible on its own navy tile; Unibook's logo was a
+blank white square; and after switching to "just the logo, no background
+shape" per request, Rawazin's logo displayed with an ugly white box
+around it that didn't match the page.
+**Cause:** Three unrelated causes bundled into one feature. (1) Thawaqa's
+logo PNG is a muted navy/gray wordmark on a transparent background,
+invisible against an equally dark navy tile. (2) Unibook's only logo
+asset is pure white artwork on a transparent background, and the resize
+URL used `img.zid.store`'s `background=white` proxy parameter, which
+bakes an opaque white canvas behind an already-white logo. (3) Rawazin's
+only hosted logo is a flat JPEG - JPEG has no alpha channel, so it can
+only ever have its own baked-in white square background, with or without
+a proxy.
+**Fix:** Switched all four logos to their raw, unproxied source URLs so
+any real transparency survives intact. Applied a CSS `invert` filter to
+Unibook's logo specifically (flips white-on-transparent to
+black-on-transparent, readable on a light page). Applied
+`mix-blend-mode: multiply` to all four logos, which makes Rawazin's baked
+-in white square disappear into the page background (white blended via
+multiply is a no-op) while doing nothing visible to the genuinely
+transparent logos.
+**Verified:** Opened each raw logo URL directly in a browser tab first to
+confirm its actual transparency/colors before wiring it into the app.
+After the fix, all four logos render cleanly directly on the page
+background with no visible box or shape around any of them.
+
+### Book cover image was distorted trying to match the result-list height
+
+**Problem:** After merging the cover image and the store-listing rows
+into one unified card, the cover looked wrong - often showing only a
+cropped sliver of the actual artwork instead of the full cover.
+**Cause:** The image container used `self-stretch` (to match the height
+of its flex sibling, the list of store rows) with `object-cover`. For a
+book carried by three or four stores, that stretched the box into a
+tall, narrow strip, and `object-cover` cropped the cover image to fill
+that arbitrary, content-dependent shape rather than preserving its own
+proportions.
+**Fix:** Gave the image a fixed `aspect-[2/3]` box sized by width only
+(matching a typical book-cover ratio), with `self-start` so it no longer
+stretches to match its sibling's height, and switched to `object-contain`
+so the whole cover is always visible (letterboxed against the page's own
+cream color on any proportion mismatch) instead of cropped.
+**Verified:** Re-searched "Atomic Habits" - the cover now displays fully
+and undistorted regardless of how many store rows are listed beside it.
