@@ -18,7 +18,7 @@ export function StoreRow({ row, badges }: { row: Row; badges: Badges }) {
   const storeName = STORE_NAMES[row.listing.store][lang];
 
   return (
-    <div className="rounded-2xl border border-navy/10 bg-white p-4 shadow-sm">
+    <div className="py-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-1.5">
           {badges.cheapestKey === key && (

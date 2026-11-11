@@ -7,28 +7,28 @@ import { StoreRow } from "./StoreRow";
 
 export function BookCard({ book, rows, badges }: { book: Book; rows: Row[]; badges: Badges }) {
   return (
-    <section className="flex flex-col gap-3">
-      <div className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-sm">
-        {book.image_url && (
+    <section className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm">
+      {book.image_url && (
+        <div className="relative w-20 flex-shrink-0 self-stretch overflow-hidden rounded-lg sm:w-28">
           <Image
             src={book.image_url}
             alt={book.title}
-            width={64}
-            height={96}
+            fill
             unoptimized
-            className="h-24 w-16 flex-shrink-0 rounded object-cover"
+            className="object-cover"
           />
-        )}
-        <div>
-          <h2 className="text-lg font-bold text-navy">{book.title}</h2>
-          {book.author && <p className="text-sm text-neutral-600">{book.author}</p>}
         </div>
-      </div>
+      )}
 
-      <div className="flex flex-col gap-3">
-        {rows.map((row) => (
-          <StoreRow key={`${row.listing.store}:${row.listing.url}`} row={row} badges={badges} />
-        ))}
+      <div className="min-w-0 flex-1">
+        <h2 className="text-lg font-bold text-navy">{book.title}</h2>
+        {book.author && <p className="text-sm text-neutral-600">{book.author}</p>}
+
+        <div className="mt-2 divide-y divide-navy/10">
+          {rows.map((row) => (
+            <StoreRow key={`${row.listing.store}:${row.listing.url}`} row={row} badges={badges} />
+          ))}
+        </div>
       </div>
     </section>
   );
