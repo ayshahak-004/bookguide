@@ -1,6 +1,7 @@
 # BookGuide (دليل الكتب)
 
 **Live:** https://bookguide.vercel.app
+**Repo:** https://github.com/ayshahak-004/bookguide
 
 A small prototype that lets a reader search for a book once and see its
 price, stock status, and delivery cost across four Omani bookstores —
@@ -110,10 +111,36 @@ npm run lint       # ESLint
   titles that happen to contain that word; Unibook's and Rawazin's hits
   are a clean bare match).
 
+## Design
+
+The UI follows a cream/navy visual style (see `app/globals.css` for the
+color tokens) built to match a provided reference mockup: a plain home
+screen with a search bar and a row of participating-store logos, a
+results screen with one card per book (cover + per-store price/stock/
+delivery/total), and a dedicated "not found" state. Each store's logo is
+pulled from its own site rather than drawn locally; see the DEVLOG entry
+"Real store logos needed three different fixes, not one" for why that
+wasn't as simple as dropping in an `<img>` tag.
+
 ## Deploying
 
+Already deployed to Vercel at the link above, under project `bookguide`
+(see `docs/DEVLOG.md` for a naming gotcha hit during linking). To deploy
+your own copy:
+
 ```bash
-npm i -g vercel   # if not already installed
+npm i -g vercel        # if not already installed
 vercel login
-vercel            # deploy from this directory, follow the prompts
+vercel link --yes --project <your-lowercase-name>
+vercel deploy           # preview deployment
+vercel deploy --prod    # promote to production
 ```
+
+## Documentation
+
+- `README.md` (this file) - what the project is and how to run it.
+- `docs/DEVLOG.md` - a dated log of problems hit during development, their
+  cause, the fix, and how each fix was verified.
+- `docs/SESSION_REPORT.md` - an academic-style retrospective of the full
+  development session: every instruction given, its outcome, and an
+  evaluation of the AI assistant's performance.

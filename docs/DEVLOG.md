@@ -292,3 +292,16 @@ so the whole cover is always visible (letterboxed against the page's own
 cream color on any proportion mismatch) instead of cropped.
 **Verified:** Re-searched "Atomic Habits" - the cover now displays fully
 and undistorted regardless of how many store rows are listed beside it.
+
+### `vercel link` rejected the project name (again)
+
+**Problem:** `vercel link --yes` failed with "Project names ... must be
+lowercase," refusing to link the project at all.
+**Cause:** Same root cause as the very first `create-next-app` failure
+in this log - the Vercel CLI, like `create-next-app`, derives a default
+project name from the current directory's basename, and the project
+lives in `C:\BooksStores` (capitalized).
+**Fix:** Passed an explicit lowercase name: `vercel link --yes --project
+bookguide`.
+**Verified:** Linked successfully to `aysh6/bookguide`; `vercel deploy`
+then built and published without error.
